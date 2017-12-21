@@ -8,6 +8,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -15,39 +19,19 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 public class ExcelUtils {
 	private static Logger logger = Logger.getLogger(ExcelUtils.class.getName());
-	public static File file;
-	public static void main(String[] args) throws Exception {
-		 file = new File("data/测试用例文件/阿里前置接口.xlsx");
-		 List<List<String>> alist = ExcelUtils.readExcel2007(file);
-		 List<String> blist = alist.get(0);
-		 String s = blist.get(8);
-		 String baowen = blist.get(7);
-		 String[] array = s.split(System.getProperty("line.separator"));
-		 //System.out.println(s);
-		 Map<String,String> map = new HashMap<String,String> ();
-		 for(String a:array) {
-			 String[] arr = a.split("=");
-			 map.put(arr[0],arr[1]);
-		 }
-		 for(Map.Entry<String,String> entry:map.entrySet()) {
-			 String key = entry.getKey();
-			 String value = entry.getValue();
-			 String realKey = "${"+key+"}";
-			 baowen = baowen.replace(realKey,value);
-		 }
-		 System.out.println(baowen);
-	}
-	public static void readExcel(File file) throws Exception{
+	public static List<List<String>> readExcel(File file) throws Exception{
+		List<List<String>> rowList = new ArrayList<List<String>>();
 		String fileName = file.getName();
 		if(fileName.endsWith("xlsx")){
-			readExcel2007(file);
+			rowList = readExcel2007(file);
 		}else if(fileName.endsWith("xls")){
-			
+			rowList = readExcel2003(file);
 		}else{
 			logger.info("测试用例文件必须是Excel");
 		}
+		return rowList;
 	}
-	public static List<List<String>> readExcel2007(File file) throws Exception{
+	private static List<List<String>> readExcel2007(File file) throws Exception{
 		List<List<String>> rowList = new ArrayList<List<String>>();
 		InputStream is = new FileInputStream(file);
 		XSSFWorkbook wb = new XSSFWorkbook(is);
@@ -65,14 +49,35 @@ public class ExcelUtils {
 				if(cell!=null) {
 					content = cell.toString();
 				}
-				//System.out.println(content);
 			    colList.add(content);
 			}
 			rowList.add(colList);
 			
 		}
-		//System.out.println(rowList);
 		wb.close();
+		return rowList;
+	}
+	private static List<List<String>> readExcel2003(File file) throws Exception{
+		List<List<String>> rowList = new ArrayList<List<String>>();
+		InputStream is = new FileInputStream(file);
+		HSSFWorkbook wb = new HSSFWorkbook(is);
+		HSSFSheet sheet = wb.getSheetAt(0);
+		HSSFRow firstRow = sheet.getRow(0);
+		int cellNum = firstRow.getPhysicalNumberOfCells();
+		int rowNum = sheet.getPhysicalNumberOfRows();
+		for(int i=1;i<rowNum;i++){
+			HSSFRow row = sheet.getRow(i);
+			List<String> colList = new ArrayList<String>();
+			for(int a=0;a<cellNum;a++){
+				String content = "";
+				HSSFCell cell = row.getCell(a);
+				if(cell!=null){
+					content = cell.toString();
+				}
+				colList.add(content);
+			}
+			rowList.add(colList);
+		}
 		return rowList;
 	}
 }
