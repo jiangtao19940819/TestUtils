@@ -7,7 +7,7 @@ public class TestCase {
 	private String caseName;
 	private String requestUrl;
 	private String requestType;
-	private Map<String,String> requestHeader;
+	private String requestHeader;
 	private String requestBody;
 	private Map<String,String> requestParam;
 	private String cheakPoint;
@@ -50,10 +50,10 @@ public class TestCase {
 	public void setRequestType(String requestType) {
 		this.requestType = requestType;
 	}
-	public Map<String, String> getRequestHeader() {
+	public String getRequestHeader() {
 		return requestHeader;
 	}
-	public void setRequestHeader(Map<String, String> requestHeader) {
+	public void setRequestHeader(String requestHeader) {
 		this.requestHeader = requestHeader;
 	}
 	public String getRequestBody() {
