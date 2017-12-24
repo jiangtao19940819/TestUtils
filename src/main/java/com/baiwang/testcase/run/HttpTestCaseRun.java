@@ -43,8 +43,8 @@ public class HttpTestCaseRun extends TestCaseRun {
 				String[] arry = head.split("=");
 				request.setHeader(arry[0],arry[1]);
 			}
-		}
-		StringEntity entry = new StringEntity(baowen);
+		}   
+		StringEntity entry = new StringEntity(baowen,"gbk");
 		request.setEntity(entry);
 		HttpResponse response = client.execute(request);
 		String result = EntityUtils.toString(response.getEntity());
