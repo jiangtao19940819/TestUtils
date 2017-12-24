@@ -8,6 +8,8 @@ import com.baiwang.javabean.TestCase;
 import com.baiwang.testcase.LoaderTestCase;
 import com.baiwang.testcase.init.HttpTestCaseInit;
 import com.baiwang.testcase.init.TestCaseInit;
+import com.baiwang.testcase.run.HttpTestCaseRun;
+import com.baiwang.testcase.run.TestCaseRun;
 import com.baiwang.utils.ExcelUtils;
 import com.baiwang.utils.FileUtils;
 
@@ -18,15 +20,15 @@ import com.baiwang.utils.FileUtils;
 public class App 
 {
     public static void main( String[] args ) throws Exception{
-    		File file = new File("data/测试用例文件/阿里前置接口.xlsx");
+    		File file = new File("data/测试用例文件/阿里前置接口2.xlsx");
     		List<List<String>> rowList = ExcelUtils.readExcel(file);
     		List<TestCase> caseList = LoaderTestCase.loader(rowList);
     		TestCaseInit tci = new HttpTestCaseInit();
-    		for(TestCase tc:caseList){
-    			tci.init(tc);
-    			System.out.println(tc.getRequestBody());
-    			System.out.println(tc.getRequestHeader());
-    		}
+    		TestCaseRun tcr = new HttpTestCaseRun();
+    		TestCase tc = caseList.get(0);
+    		tci.init(tc);
+    		String result = tcr.run(tc);
+    		System.out.println(result);
        }
     
 }
