@@ -1,5 +1,5 @@
 package com.baiwang.function;
-
+import com.baiwang.javabean.Global;
 public class Function {
 	public String getRandomNumber(String num){
 		int num2 = Integer.valueOf(num);
@@ -9,5 +9,13 @@ public class Function {
 			sb.append(a);
 		}
 		return sb.toString();
+	}
+	public String set(String value){
+		String[] args = value.split(",");
+		Global.param.put(args[0],args[1]);
+		return "success";
+	}
+	public String get(String key){
+		return Global.param.get(key);
 	}
 }

@@ -1,5 +1,6 @@
 package com.baiwang.testcase.run;
 
+import java.util.Map;
 import java.util.logging.Logger;
 
 import org.apache.http.HttpResponse;
@@ -9,32 +10,41 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
-
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 import com.baiwang.javabean.TestCase;
+import com.baiwang.utils.Parse;
 
 public class HttpTestCaseRun extends TestCaseRun {
 	private String url;
 	private String header;
 	private String baowen;
 	private String type;
+	private String result;
 	private static Logger logger = Logger.getLogger(HttpTestCaseRun.class.getName());
 	@Override
-	public String run(TestCase tc) throws Exception{
+	public boolean run(TestCase tc) throws Exception{
 	    type = tc.getRequestType();
 	    url = tc.getRequestUrl();
 		header = tc.getRequestHeader();
 		baowen = tc.getRequestBody();
-		String result = "";
+		//logger.info(baowen);
 		if(type.equals("POST")){
-			result = postRun(tc);
+			postRun(tc);
 		}else if(type.equals("GET")){
-			result = getRun(tc);
+			getRun(tc);
 		}else{
 			logger.info("HTTP Request TYPE ERROR");
 		}
-		return result;
+		tc.setTestResponse(result);
+		boolean testResult = check(tc);
+		tc.setTestResult(String.valueOf(testResult));
+		afterTest(tc);
+		logger.info(result);
+		return testResult;
+		
 	}
-	private String postRun(TestCase tc) throws Exception{
+	private void postRun(TestCase tc) throws Exception{
 		CloseableHttpClient client = HttpClients.createDefault();
 		HttpPost request = new HttpPost(url);
 		if(!header.equals("")){
@@ -47,11 +57,11 @@ public class HttpTestCaseRun extends TestCaseRun {
 		StringEntity entry = new StringEntity(baowen,"gbk");
 		request.setEntity(entry);
 		HttpResponse response = client.execute(request);
-		String result = EntityUtils.toString(response.getEntity());
+		result = EntityUtils.toString(response.getEntity());
 		client.close();
-		return result;
+		
 	}
-	private String getRun(TestCase tc) throws Exception{
+	private void getRun(TestCase tc) throws Exception{
 		CloseableHttpClient client = HttpClients.createDefault();
 		HttpGet request = new HttpGet(url);
 		if(!header.equals("")){
@@ -62,8 +72,39 @@ public class HttpTestCaseRun extends TestCaseRun {
 			}
 		}
 		HttpResponse response = client.execute(request);
-		String result = EntityUtils.toString(response.getEntity());
+		result = EntityUtils.toString(response.getEntity());
 		client.close();
-		return result;
+		
+	}
+	private boolean check(TestCase tc){
+		String checkPoint = tc.getCheakPoint();
+		logger.info(checkPoint);
+		if(result.contains(checkPoint)){
+			return true;
+		}else{
+			return false;
+		}
+	}
+	private void afterTest(TestCase tc) throws Exception{
+		Map<String,String> outParam = tc.getOutParam();
+		if(!(outParam==null)){
+			for(Map.Entry<String,String> entry:outParam.entrySet()){
+				String key = entry.getKey();
+				String value = entry.getValue();
+				if(value.startsWith("$")){
+					logger.info(value);
+					String re = value.substring(value.indexOf("{")+1,value.indexOf("}"));
+					Pattern p = Pattern.compile(re);
+					Matcher m = p.matcher(result);
+					if(m.find()){
+						String val = m.group(1);
+						value = value.replace(re,key+","+val);
+					}
+					
+					value = Parse.parse(value);
+					
+				}
+			}
+		}
 	}
 }

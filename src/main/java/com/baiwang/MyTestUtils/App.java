@@ -4,6 +4,7 @@ import java.io.File;
 import java.lang.reflect.Method;
 import java.util.List;
 
+import com.baiwang.javabean.Global;
 import com.baiwang.javabean.TestCase;
 import com.baiwang.testcase.LoaderTestCase;
 import com.baiwang.testcase.init.HttpTestCaseInit;
@@ -27,16 +28,15 @@ public class App
     		List<TestCase> caseList = LoaderTestCase.loader(rowList);
     		TestCaseInit tci = new HttpTestCaseInit();
     		TestCaseRun tcr = new HttpTestCaseRun();
-    		TestCase tc = caseList.get(0);
-    		tci.init(tc);
-    		String result = tcr.run(tc);
-    		System.out.println(result);
-    		//String result = "<?xml version=\"1.0\" encoding=\"gbk\"?><rtnmsg><returncode>4000</returncode><returnmsg>成功</returnmsg><returndata><fpdm>150007899689</fpdm><fphm>11727676</fphm><kprq>20171224154338</kprq></returndata></rtnmsg>";
-    		String fpdm = "";
-    		Pattern p = Pattern.compile(fpdm);
-    		Matcher m = p.matcher(result);
-    		m.find();
-    		System.out.println(m.group(1));
+    		for(TestCase tc:caseList){
+    			tci.init(tc);
+        		boolean result = tcr.run(tc);
+        		System.out.println(result);
+    		}
+    		
+    		
+    		//System.out.println(Global.param);
+    		
        }
     
 }

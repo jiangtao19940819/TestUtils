@@ -14,6 +14,13 @@ public class TestCase {
 	private Map<String,String> outParam;
 	private String testResult;
 	private String runTime;
+	private String testResponse;
+	public String getTestResponse() {
+		return testResponse;
+	}
+	public void setTestResponse(String testResponse) {
+		this.testResponse = testResponse;
+	}
 	public int getCaseId() {
 		return caseId;
 	}

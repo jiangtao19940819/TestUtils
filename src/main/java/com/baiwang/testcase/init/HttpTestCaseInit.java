@@ -24,14 +24,16 @@ public class HttpTestCaseInit extends TestCaseInit{
 		String headParam = tc.getRequestHeader();
 		String baowen = tc.getRequestBody();
 		String url = tc.getRequestUrl();
+		String checkPoint = tc.getCheakPoint();
 		for(String key:reqParam.keySet()){
 			headParam = headParam.replace("${"+key+"}",reqParam.get(key));
 			baowen = baowen.replace("${"+key+"}",reqParam.get(key));
 			url = url.replace("${"+key+"}",reqParam.get(key));
-			
+			checkPoint = checkPoint.replace("${"+key+"}",reqParam.get(key));
 		}
 		tc.setRequestHeader(headParam);
 		tc.setRequestBody(baowen);
 		tc.setRequestUrl(url);
+		tc.setCheakPoint(checkPoint);
 	}
 }
