@@ -12,6 +12,8 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
+
+import com.baiwang.javabean.Global;
 import com.baiwang.javabean.TestCase;
 import com.baiwang.utils.Parse;
 
@@ -21,27 +23,39 @@ public class HttpTestCaseRun extends TestCaseRun {
 	private String baowen;
 	private String type;
 	private String result;
+	private String response;
+	private String checkPoint;
+	Map<String,String> outParam;
 	private static Logger logger = Logger.getLogger(HttpTestCaseRun.class.getName());
 	@Override
-	public boolean run(TestCase tc) throws Exception{
+	public void run(TestCase tc){
 	    type = tc.getRequestType();
 	    url = tc.getRequestUrl();
-		header = tc.getRequestHeader();
-		baowen = tc.getRequestBody();
-		//logger.info(baowen);
-		if(type.equals("POST")){
-			postRun(tc);
-		}else if(type.equals("GET")){
-			getRun(tc);
-		}else{
-			logger.info("HTTP Request TYPE ERROR");
-		}
-		tc.setTestResponse(result);
-		boolean testResult = check(tc);
-		tc.setTestResult(String.valueOf(testResult));
-		afterTest(tc);
-		logger.info(result);
-		return testResult;
+	    header = tc.getRequestHeader();
+	    baowen = tc.getRequestBody();
+	    checkPoint = tc.getCheakPoint();
+	    outParam = tc.getOutParam();
+	    try{
+	    	if(type.equals("POST")){
+		    	postRun(tc);
+		    }else if(type.equals("GET")){
+		    	getRun(tc);
+		    }else{
+		    	logger.info("HTTP Request TYPE ERROR");
+		    	return;
+		    }
+	    	tc.setTestResponse(response);
+	    	if(response.contains(checkPoint)){
+	    		tc.setTestResult("Pass");
+	    	}else{
+	    		tc.setTestResult("Failure");
+	    	}
+	    }catch(Exception e){
+	    	e.printStackTrace();
+	    	tc.setTestResponse("HTTP接口调用异常:"+e.toString());
+	    	tc.setTestResult("Exception");
+	    }
+	    afterTest();
 		
 	}
 	private void postRun(TestCase tc) throws Exception{
@@ -54,10 +68,12 @@ public class HttpTestCaseRun extends TestCaseRun {
 				request.setHeader(arry[0],arry[1]);
 			}
 		}   
-		StringEntity entry = new StringEntity(baowen,"gbk");
+		StringEntity entry = new StringEntity(baowen,"utf-8");
 		request.setEntity(entry);
-		HttpResponse response = client.execute(request);
-		result = EntityUtils.toString(response.getEntity());
+		HttpResponse resp = client.execute(request);
+		response = EntityUtils.toString(resp.getEntity());
+		//logger.info("请求报文："+baowen);
+		//logger.info("返回报文："+response);
 		client.close();
 		
 	}
@@ -71,40 +87,35 @@ public class HttpTestCaseRun extends TestCaseRun {
 				request.setHeader(arry[0],arry[1]);
 			}
 		}
-		HttpResponse response = client.execute(request);
-		result = EntityUtils.toString(response.getEntity());
+		HttpResponse resp = client.execute(request);
+		response = EntityUtils.toString(resp.getEntity());
 		client.close();
 		
 	}
-	private boolean check(TestCase tc){
-		String checkPoint = tc.getCheakPoint();
-		logger.info(checkPoint);
-		if(result.contains(checkPoint)){
-			return true;
-		}else{
-			return false;
-		}
-	}
-	private void afterTest(TestCase tc) throws Exception{
-		Map<String,String> outParam = tc.getOutParam();
-		if(!(outParam==null)){
-			for(Map.Entry<String,String> entry:outParam.entrySet()){
-				String key = entry.getKey();
-				String value = entry.getValue();
-				if(value.startsWith("$")){
-					logger.info(value);
-					String re = value.substring(value.indexOf("{")+1,value.indexOf("}"));
-					Pattern p = Pattern.compile(re);
-					Matcher m = p.matcher(result);
-					if(m.find()){
-						String val = m.group(1);
-						value = value.replace(re,key+","+val);
+	
+	private void afterTest(){
+		try{
+			if(!(outParam==null)){
+				for(Map.Entry<String,String> entry:outParam.entrySet()){
+					String key = entry.getKey();
+					String value = entry.getValue();
+					if(value.startsWith("$")){
+						String re = value.substring(value.indexOf("{")+1,value.indexOf("}"));
+						Pattern p = Pattern.compile(re);
+						Matcher m = p.matcher(response);
+						if(m.find()){
+							String val = m.group(1);
+							value = value.replace(re,key+","+val);
+						}
+						value = Parse.parse(value);
+					}else{
+						Global.param.put(key, value);
 					}
-					
-					value = Parse.parse(value);
 					
 				}
 			}
+		}catch(Exception e){
+			e.printStackTrace();
 		}
 	}
 }

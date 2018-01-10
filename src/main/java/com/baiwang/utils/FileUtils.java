@@ -24,7 +24,6 @@ public class FileUtils {
 			fileInputDir = prop.getProperty("InputFileDir");
 			fileOutputDir = prop.getProperty("OutputFileDir");
 			testFile = prop.getProperty("TestFile");
-			is.close();
 		}catch(Exception e){
 			e.printStackTrace();
 		}
@@ -47,11 +46,9 @@ public class FileUtils {
 		}
 		return testExcelFile;
 	}
-	public static boolean copyFile(File file) {
+	public static boolean copyFile(File file,String time) {
 		boolean flag = false;
 		try{
-			SimpleDateFormat sf = new SimpleDateFormat("yyyyMMdd_HHmmss");
-			String time = sf.format(new Date());
 			String resultName = time+file.getName();
 			String testResultPath = fileOutputDir+File.separator+resultName;
 			InputStream is = new FileInputStream(file);

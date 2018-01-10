@@ -1,6 +1,9 @@
 package com.baiwang.function;
+import java.util.logging.Logger;
+
 import com.baiwang.javabean.Global;
 public class Function {
+	private static Logger logger = Logger.getLogger(Function.class.getName());
 	public String getRandomNumber(String num){
 		int num2 = Integer.valueOf(num);
 		StringBuffer sb = new StringBuffer("");
@@ -12,6 +15,10 @@ public class Function {
 	}
 	public String set(String value){
 		String[] args = value.split(",");
+		if(args.length==1){
+			logger.info("将 "+args[0]+" 放入全局变量失败");
+			return "failure";
+		}
 		Global.param.put(args[0],args[1]);
 		return "success";
 	}
