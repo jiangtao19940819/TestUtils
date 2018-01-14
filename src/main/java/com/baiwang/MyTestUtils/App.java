@@ -15,7 +15,7 @@ import com.baiwang.testcase.LoaderTestCase;
 import com.baiwang.testcase.init.HttpTestCaseInit;
 import com.baiwang.testcase.init.TestCaseInit;
 import com.baiwang.testcase.run.HttpTestCaseRun;
-import com.baiwang.testcase.run.SDKTestCaseRun;
+
 import com.baiwang.testcase.run.TestCaseRun;
 import com.baiwang.utils.ExcelUtils;
 import com.baiwang.utils.FileUtils;

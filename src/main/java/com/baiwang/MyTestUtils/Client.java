@@ -11,7 +11,7 @@ import com.baiwang.testcase.LoaderTestCase;
 import com.baiwang.testcase.init.HttpTestCaseInit;
 import com.baiwang.testcase.init.TestCaseInit;
 import com.baiwang.testcase.run.HttpTestCaseRun;
-import com.baiwang.testcase.run.SDKTestCaseRun;
+//import com.baiwang.testcase.run.SDKTestCaseRun;
 import com.baiwang.testcase.run.TestCaseRun;
 import com.baiwang.utils.ExcelUtils;
 import com.baiwang.utils.FileUtils;
@@ -51,10 +51,10 @@ public class Client {
  					 tr = new HttpTestCaseRun();
  					
  				}
- 				if(tc.getRequestType().equals("SDK")){
+ 				/*if(tc.getRequestType().equals("SDK")){
  					 ti = new HttpTestCaseInit();
  					 tr = new SDKTestCaseRun();
- 				}
+ 				}*/
  				ti.init(tc);
 	    		tr.run(tc);
 	    		num++;

@@ -9,7 +9,7 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.baiwang.baiwangcloud.*;
+/*import com.baiwang.baiwangcloud.*;
 import com.baiwang.baiwangcloud.client.BaiwangCouldAPIClient;
 public class SDKTestCaseRun extends TestCaseRun{
 	private String url;
@@ -51,10 +51,10 @@ public class SDKTestCaseRun extends TestCaseRun{
 			
 	}
 	
-	/**
+	*//**
 	 * @param 从全局变量和TestCase中获取请求需要的参数，并登录
 	 * @return
-	 */
+	 *//*
 	private boolean beforeTest(TestCase tc){
 		boolean flag = false;
 		try{
@@ -101,3 +101,4 @@ public class SDKTestCaseRun extends TestCaseRun{
 	}
 	
 }
+*/
