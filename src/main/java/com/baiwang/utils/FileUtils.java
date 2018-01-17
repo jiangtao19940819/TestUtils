@@ -18,8 +18,11 @@ public class FileUtils {
 	private static Logger logger = Logger.getLogger(FileUtils.class.getName());
 	static {
 		try{
+			System.out.println(System.getProperty("user.dir"));
+			System.out.println(new File(System.getProperty("user.dir")).getParent());
 			String filePath = System.getProperty("user.dir");
 			Properties prop = new Properties();
+			System.out.println(filePath+File.separator+"properties.properties");
 			InputStreamReader is = new InputStreamReader(new FileInputStream(filePath+File.separator+"properties.properties"),"UTF-8");
 			prop.load(is);
 			fileInputDir = prop.getProperty("InputFileDir");

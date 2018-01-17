@@ -31,6 +31,7 @@ public class Mail {
 	//通过配置文件获得邮件发送者地址和收件人地址 InternetAddress[] toAddressArray
 	static {
 		try{
+
 			String filePath = System.getProperty("user.dir");
 			Properties prop = new Properties();
 			InputStreamReader is = new InputStreamReader(new FileInputStream(filePath+File.separator+"properties.properties"),"UTF-8");
