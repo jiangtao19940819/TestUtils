@@ -9,6 +9,9 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+public class SDKTestCaseRun{
+	
+}
 /*import com.baiwang.baiwangcloud.*;
 import com.baiwang.baiwangcloud.client.BaiwangCouldAPIClient;
 public class SDKTestCaseRun extends TestCaseRun{

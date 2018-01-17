@@ -29,10 +29,14 @@ public class ExcelUtils {
 	private static String outDataDir;
 	static{
 		try{
+			String filePath = System.getProperty("user.dir");
 			Properties prop = new Properties();
-			InputStreamReader is = new InputStreamReader(new FileInputStream("properties.properties"),"UTF-8");
+			InputStreamReader is = new InputStreamReader(new FileInputStream(filePath+File.separator+"properties.properties"),"UTF-8");
 			prop.load(is);
 			outDataDir = prop.getProperty("OutputFileDir");
+			if(outDataDir.equals("")){
+				outDataDir = filePath+File.separator+"data"+File.separator+"测试结果文件";
+			}
 			logger.info(">>>>>"+outDataDir);
 		}catch(Exception e){
 			e.printStackTrace();

@@ -31,10 +31,15 @@ public class Mail {
 	//通过配置文件获得邮件发送者地址和收件人地址 InternetAddress[] toAddressArray
 	static {
 		try{
+			String filePath = System.getProperty("user.dir");
 			Properties prop = new Properties();
-			InputStreamReader is = new InputStreamReader(new FileInputStream("properties.properties"),"utf-8");
+			InputStreamReader is = new InputStreamReader(new FileInputStream(filePath+File.separator+"properties.properties"),"UTF-8");
+
 			prop.load(is);
 			OutputFileDir = prop.getProperty("OutputFileDir");
+			if(OutputFileDir.equals("")){
+				OutputFileDir = filePath+File.separator+"data"+File.separator+"测试结果文件";
+			}
 			String toAddress = prop.getProperty("ToEmailAddress");
 			String selfAddress = prop.getProperty("FromEmailAddress");
 			String[] self = selfAddress.split(",");

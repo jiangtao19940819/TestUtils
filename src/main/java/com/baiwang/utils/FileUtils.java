@@ -18,11 +18,19 @@ public class FileUtils {
 	private static Logger logger = Logger.getLogger(FileUtils.class.getName());
 	static {
 		try{
+			String filePath = System.getProperty("user.dir");
 			Properties prop = new Properties();
-			InputStreamReader is = new InputStreamReader(new FileInputStream("properties.properties"),"UTF-8");
+			InputStreamReader is = new InputStreamReader(new FileInputStream(filePath+File.separator+"properties.properties"),"UTF-8");
 			prop.load(is);
 			fileInputDir = prop.getProperty("InputFileDir");
+			System.out.println(">>>"+fileInputDir);
+			if(fileInputDir.equals("")){
+				fileInputDir = filePath+File.separator+"data"+File.separator+"测试用例文件";
+			}
 			fileOutputDir = prop.getProperty("OutputFileDir");
+			if(fileOutputDir.equals("")){
+				fileOutputDir = filePath+File.separator+"data"+File.separator+"测试结果文件";
+			}
 			testFile = prop.getProperty("TestFile");
 		}catch(Exception e){
 			e.printStackTrace();
