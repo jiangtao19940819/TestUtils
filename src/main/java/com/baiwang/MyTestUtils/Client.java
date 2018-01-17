@@ -89,7 +89,7 @@ public class Client {
  			
  		}
  		sf[fileArray.length] = "总共运行:"+num+"条测试用例"+" 成功:"+success+" 失败:"+fail+" 跳过:"+skip+" 异常:"+exception+"。 "+reMessage;
- 		//Mail.sendMail(sf);
+ 		Mail.sendMail(sf);
  		System.out.println("总共运行:"+num+"条测试用例"+" 成功:"+success+" 失败:"+fail+" 跳过:"+skip+" 异常:"+exception+"。 "+reMessage);
 	}
 }
